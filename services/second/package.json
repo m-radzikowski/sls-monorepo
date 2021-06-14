@@ -1,0 +1,13 @@
+{
+  "name": "@sls-monorepo/second",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "remove": "serverless remove"
+  },
+  "dependencies": {
+    "@sls-monorepo/common": "1.0.0",
+    "@sls-monorepo/first": "1.0.0"
+  }
+}

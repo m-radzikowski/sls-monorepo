@@ -1,0 +1,28 @@
+service: third
+
+projectDir: ..
+
+custom:
+  project: ${file(../config.yml):project}
+  baseName: ${self:custom.project}-${self:provider.stage}-${self:service}
+
+provider:
+  name: aws
+  region: eu-west-1
+  stage: ${opt:stage, 'dev'}
+  stackName: ${self:custom.baseName}
+  deploymentBucket:
+    name: ${cf:${self:custom.project}-${self:provider.stage}-common.ServerlessDeploymentBucketName}
+  runtime: nodejs14.x
+
+functions:
+  myFunction:
+    name: ${self:custom.baseName}-myFunction
+    handler: index.handler
+
+resources:
+  Outputs:
+    # to prevent exported name collision: https://github.com/serverless/serverless/issues/9361
+    ServerlessDeploymentBucketName:
+      Export:
+        Name: ${self:custom.project}-${self:service}-ServerlessDeploymentBucketName

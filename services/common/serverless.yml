@@ -1,0 +1,31 @@
+service: common
+
+projectDir: ..
+
+plugins:
+  - serverless-s3-remover
+
+custom:
+  project: ${file(../config.yml):project}
+  baseName: ${self:custom.project}-${self:provider.stage}-${self:service}
+
+  remover:
+    buckets:
+      # remove artifacts from the deployment bucket manually in case that some already deployed service
+      # is removed from the repo so it wont be able to remove its own artifacts from the bucket
+      - ${cf:${self:custom.baseName}.ServerlessDeploymentBucketName, ''}
+
+provider:
+  name: aws
+  region: eu-west-1
+  stage: ${opt:stage, 'dev'}
+  stackName: ${self:custom.baseName}
+  deploymentBucket:
+    blockPublicAccess: true
+
+resources:
+  Outputs:
+    # to prevent exported name collision: https://github.com/serverless/serverless/issues/9361
+    ServerlessDeploymentBucketName:
+      Export:
+        Name: ${self:custom.project}-${self:service}-ServerlessDeploymentBucketName

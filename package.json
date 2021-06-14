@@ -1,0 +1,17 @@
+{
+  "name": "sls-monorepo",
+  "version": "1.0.0",
+  "author": "Maciej Radzikowski",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "services/*"
+  ],
+  "scripts": {
+    "deploy": "lerna run deploy --stream --",
+    "remove": "lerna ls --toposort | tac | xargs -I % lerna run --stream --no-bail --scope % remove --"
+  },
+  "devDependencies": {
+    "lerna": "4.0.0"
+  }
+}
